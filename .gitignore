@@ -1,0 +1,24 @@
+# Environment files
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# macOS
+.DS_Store
+
+# Windows
+desktop.ini
+
+# Python cache
+.pytest_cache/
+
+# Logs
+*.log

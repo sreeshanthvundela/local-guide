@@ -1,0 +1,177 @@
+/* Main Page */
+
+.business-page {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px;
+}
+
+/* Banner */
+
+.business-banner img {
+  width: 100%;
+  height: 400px;
+
+  object-fit: cover;
+
+  border-radius: 20px;
+}
+
+/* Business Info */
+
+.business-info {
+  margin-top: 25px;
+
+  padding: 25px;
+
+  background: white;
+
+  border-radius: 15px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.business-info h1 {
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.business-info p {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* About Section */
+
+.about-section {
+  margin-top: 30px;
+
+  padding: 25px;
+
+  background: white;
+
+  border-radius: 15px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.about-section h2 {
+  margin-bottom: 15px;
+}
+
+/* Gallery */
+
+.gallery-section {
+  margin-top: 30px;
+
+  padding: 25px;
+
+  background: white;
+
+  border-radius: 15px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.gallery-section h2 {
+  margin-bottom: 20px;
+}
+
+.gallery {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(250px, 1fr));
+
+  gap: 20px;
+}
+
+.gallery img {
+  width: 100%;
+  height: 220px;
+
+  object-fit: cover;
+
+  border-radius: 12px;
+}
+
+/* Reviews */
+
+.review-section {
+  margin-top: 30px;
+
+  padding: 25px;
+
+  background: white;
+
+  border-radius: 15px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.review-section h2 {
+  margin-bottom: 20px;
+}
+
+.review-card {
+  padding: 20px;
+
+  border-radius: 10px;
+
+  background: #f8fafc;
+
+  margin-bottom: 15px;
+}
+
+/* Direction Button */
+
+.direction-btn {
+  margin-top: 30px;
+
+  width: 100%;
+
+  padding: 18px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.direction-btn:hover {
+  background: #1d4ed8;
+}
+.map-section {
+  margin-top: 50px;
+}
+
+.leaflet-container {
+  border-radius: 15px;
+}
+/* Responsive */
+
+@media (max-width: 768px) {
+
+  .business-page {
+    padding: 15px;
+  }
+
+  .business-banner img {
+    height: 250px;
+  }
+
+  .business-info h1 {
+    font-size: 28px;
+  }
+
+}

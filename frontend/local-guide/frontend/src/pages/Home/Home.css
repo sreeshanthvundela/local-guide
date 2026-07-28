@@ -1,0 +1,213 @@
+/* ===========================
+   HERO SECTION
+=========================== */
+
+.hero {
+  min-height: 90vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  padding: 60px 20px;
+
+  background:
+    radial-gradient(
+      circle at top,
+      #dbeafe 0%,
+      #eff6ff 30%,
+      #f8fafc 70%
+    );
+}
+
+/* Location Badge */
+
+.location-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 14px 30px;
+
+  background: rgba(37, 99, 235, 0.1);
+
+  border-radius: 999px;
+
+  color: #2563eb;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  margin-bottom: 30px;
+}
+
+/* Hero Heading */
+
+.hero h1 {
+  font-size: 92px;
+
+  line-height: 1.1;
+
+  font-weight: 800;
+
+  color: #0f172a;
+
+  max-width: 1200px;
+
+  margin-bottom: 25px;
+}
+
+/* Hero Text */
+
+.hero p {
+  max-width: 850px;
+
+  font-size: 24px;
+
+  color: #64748b;
+
+  margin-bottom: 40px;
+}
+
+/* Search Bar Area */
+
+.search-container {
+  width: 100%;
+
+  max-width: 1000px;
+
+  display: flex;
+
+  justify-content: center;
+
+  margin-top: 10px;
+}
+
+.search-container input {
+  flex: 1;
+
+  padding: 22px;
+
+  border: none;
+
+  border-radius: 20px 0 0 20px;
+
+  font-size: 18px;
+
+  outline: none;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.08);
+}
+
+.search-container button {
+  padding: 22px 40px;
+
+  border: none;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  border-radius: 0 20px 20px 0;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.search-container button:hover {
+  background: #1d4ed8;
+}
+
+/* ===========================
+   POPULAR SEARCHES
+=========================== */
+
+.popular-searches {
+  margin-top: 35px;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: 15px;
+}
+
+.popular-searches button {
+  border: none;
+
+  background: white;
+
+  padding: 12px 22px;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  box-shadow:
+    0 4px 15px rgba(0,0,0,0.08);
+
+  transition: 0.3s;
+}
+
+.popular-searches button:hover {
+  background: #2563eb;
+  color: white;
+
+  transform: translateY(-3px);
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 1024px) {
+
+  .hero h1 {
+    font-size: 70px;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .hero {
+    min-height: auto;
+    padding: 100px 20px;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+  }
+
+  .hero p {
+    font-size: 18px;
+  }
+
+  .search-container {
+    flex-direction: column;
+  }
+
+  .search-container input {
+    width: 100%;
+    border-radius: 15px;
+  }
+
+  .search-container button {
+    width: 100%;
+    margin-top: 10px;
+
+    border-radius: 15px;
+  }
+
+}

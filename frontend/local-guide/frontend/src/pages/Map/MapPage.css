@@ -1,0 +1,49 @@
+.map-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.results-panel {
+ width: 350px;
+  background: white;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.results-header h2 {
+  margin-bottom: 15px;
+}
+
+.results-header input {
+  width: 100%;
+  padding: 12px;
+
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  margin-bottom: 20px;
+}
+
+.result-card {
+  background: #f8fafc;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  margin-bottom: 15px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.result-card:hover {
+  background: #dbeafe;
+}
+
+.map-container {
+  flex: 1;
+  height: 100vh;
+}
