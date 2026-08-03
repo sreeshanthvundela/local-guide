@@ -1,13 +1,12 @@
 import requests
 
-def search_city(city_name: str):
-
+def geocode_address(address: str):
     url = "https://nominatim.openstreetmap.org/search"
 
     params = {
-        "q": city_name,
+        "q": address,
         "format": "json",
-        "limit": 1
+        "limit": 1,
     }
 
     headers = {
@@ -26,7 +25,7 @@ def search_city(city_name: str):
         return None
 
     return {
-        "name": city_name,
-        "lat": data[0]["lat"],
-        "lon": data[0]["lon"]
+        "name": address,
+        "lat": float(data[0]["lat"]),
+        "lon": float(data[0]["lon"])
     }

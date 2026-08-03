@@ -2,7 +2,8 @@ alembic==1.18.5
 annotated-doc==0.0.4
 annotated-types==0.8.0
 anyio==4.14.2
-bcrypt==5.0.0
+# passlib 1.7.4 is incompatible with bcrypt 4.1+ and 5.x during its backend check.
+bcrypt==4.0.1
 certifi==2026.7.22
 cffi==2.1.0
 charset-normalizer==3.4.9

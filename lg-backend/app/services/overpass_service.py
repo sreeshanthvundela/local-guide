@@ -1,6 +1,14 @@
+import re
+
 import requests
 
-OVERPASS_URL = "https://lz4.overpass-api.de/api/interpreter"
+# Public Overpass instances can be temporarily overloaded. Try an alternate
+# instance before reporting that there are no nearby places.
+OVERPASS_URLS = (
+    "https://overpass.private.coffee/api/interpreter",
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
+)
 
 CATEGORY_MAP = {
     "restaurant": [("amenity", "restaurant")],
@@ -63,6 +71,23 @@ CATEGORY_MAP = {
         ("shop", "convenience"),
         ("shop", "mall"),
     ],
+
+    "atm": [
+        ("amenity", "atm"),
+    ],
+}
+
+CATEGORY_ALIASES = {
+    "restaurants": "restaurant",
+    "cafes": "cafe",
+    "hospitals": "hospital",
+    "pharmacies": "pharmacy",
+    "hotels": "hotel",
+    "schools": "school",
+    "gyms": "gym",
+    "banks": "bank",
+    "parks": "park",
+    "supermarkets": "supermarket",
 }
 
 def format_address(tags):
@@ -84,6 +109,29 @@ def format_address(tags):
         )
 
     return address
+
+
+def run_overpass_query(query):
+    """Run a query against available public Overpass instances."""
+    for url in OVERPASS_URLS:
+        try:
+            response = requests.post(
+                url,
+                data={"data": query},
+                headers={"User-Agent": "LocalGuide/1.0"},
+                timeout=30,
+            )
+
+            if response.status_code == 200:
+                return response.json()
+
+            print(f"Overpass {url} returned {response.status_code}")
+        except requests.RequestException as error:
+            print(f"Overpass {url} failed: {error}")
+
+    return None
+
+
 def get_nearby_places(lat, lon, category="restaurant", radius=5000):
 
     filters = CATEGORY_MAP.get(
@@ -105,27 +153,12 @@ def get_nearby_places(lat, lon, category="restaurant", radius=5000):
 
     query += """
     );
-    out center tags;
+    out center tags 150;
     """
 
-    try:
-        response = requests.post(
-            OVERPASS_URL,
-            data={"data": query},
-            headers={"User-Agent": "LocalGuide/1.0"},
-            timeout=60,
-        )
+    data = run_overpass_query(query)
 
-        print("STATUS:", response.status_code)
-
-        if response.status_code != 200:
-            print(response.text[:500])
-            return []
-
-        data = response.json()
-
-    except Exception as e:
-        print(e)
+    if data is None:
         return []
 
     places = []
@@ -173,24 +206,13 @@ def get_business_details(osm_id):
       way({osm_id});
       relation({osm_id});
     );
-    out center tags;
+    out center tags 1;
     """
 
-    try:
-        response = requests.post(
-            OVERPASS_URL,
-            data={"data": query},
-            headers={"User-Agent": "LocalGuide/1.0"},
-            timeout=60,
-        )
+    data = run_overpass_query(query)
 
-        if response.status_code != 200:
-            return {"error": f"Overpass returned {response.status_code}"}
-
-        data = response.json()
-
-    except Exception as e:
-        return {"error": str(e)}
+    if data is None:
+        return {"error": "Unable to reach an Overpass service"}
 
     if not data.get("elements"):
         return {"error": "Business not found"}
@@ -231,45 +253,28 @@ def get_all_nearby_services(lat, lon, radius=5000):
     query = f"""
     [out:json][timeout:25];
     (
-      node["amenity"](around:{radius},{lat},{lon});
-      way["amenity"](around:{radius},{lat},{lon});
-      relation["amenity"](around:{radius},{lat},{lon});
+      node["amenity"]["name"](around:{radius},{lat},{lon});
+      way["amenity"]["name"](around:{radius},{lat},{lon});
+      relation["amenity"]["name"](around:{radius},{lat},{lon});
 
-      node["shop"](around:{radius},{lat},{lon});
-      way["shop"](around:{radius},{lat},{lon});
-      relation["shop"](around:{radius},{lat},{lon});
+      node["shop"]["name"](around:{radius},{lat},{lon});
+      way["shop"]["name"](around:{radius},{lat},{lon});
+      relation["shop"]["name"](around:{radius},{lat},{lon});
 
-      node["tourism"](around:{radius},{lat},{lon});
-      way["tourism"](around:{radius},{lat},{lon});
-      relation["tourism"](around:{radius},{lat},{lon});
+      node["tourism"]["name"](around:{radius},{lat},{lon});
+      way["tourism"]["name"](around:{radius},{lat},{lon});
+      relation["tourism"]["name"](around:{radius},{lat},{lon});
 
-      node["leisure"](around:{radius},{lat},{lon});
-      way["leisure"](around:{radius},{lat},{lon});
-      relation["leisure"](around:{radius},{lat},{lon});
+      node["leisure"]["name"](around:{radius},{lat},{lon});
+      way["leisure"]["name"](around:{radius},{lat},{lon});
+      relation["leisure"]["name"](around:{radius},{lat},{lon});
     );
-    out center tags;
+    out center tags 150;
     """
 
-    try:
-        response = requests.post(
-            OVERPASS_URL,
-            data={"data": query},
-            headers={"User-Agent": "LocalGuide/1.0"},
-            timeout=60,
-        )
+    data = run_overpass_query(query)
 
-        print("STATUS:", response.status_code)
-
-        if response.status_code != 200:
-            print(response.text[:500])
-            return []
-
-        data = response.json()
-        print("STATUS:", response.status_code)
-        print("ELEMENTS:", len(data.get("elements", [])))
-
-    except Exception as e:
-        print(e)
+    if data is None:
         return []
 
     services = []
@@ -308,28 +313,53 @@ def get_all_nearby_services(lat, lon, radius=5000):
 
     return services
 def search_places(lat, lon, query, radius=1000):
+    """Search a category or a business name without scanning every service."""
+    normalized_query = CATEGORY_ALIASES.get(query.strip().lower(), query.strip().lower())
+
+    if normalized_query in CATEGORY_MAP:
+        return get_nearby_places(lat, lon, normalized_query, radius)
+
+    # Escape user input before using it in Overpass's regular-expression filter.
+    name_pattern = re.escape(query.strip())
+    overpass_query = f"""
+    [out:json][timeout:20];
+    (
+      node["name"~"{name_pattern}",i](around:{radius},{lat},{lon});
+      way["name"~"{name_pattern}",i](around:{radius},{lat},{lon});
+      relation["name"~"{name_pattern}",i](around:{radius},{lat},{lon});
+    );
+    out center tags 100;
     """
-    Search nearby places by category or name.
-    """
 
-    # First try treating the query as a category
-    category_results = get_nearby_places(
-        lat,
-        lon,
-        query.lower(),
-        radius,
-    )
+    data = run_overpass_query(overpass_query)
+    if data is None:
+        return []
 
-    if category_results:
-        return category_results
+    places = []
+    for element in data.get("elements", []):
+        tags = element.get("tags", {})
+        lat_value = element.get("lat", element.get("center", {}).get("lat"))
+        lon_value = element.get("lon", element.get("center", {}).get("lon"))
 
-    # Otherwise search every nearby place by name
-    services = get_all_nearby_services(lat, lon, radius)
+        if lat_value is None or lon_value is None:
+            continue
 
-    query = query.lower()
+        places.append(
+            {
+                "id": element.get("id"),
+                "name": tags.get("name", "Unknown"),
+                "category": (
+                    tags.get("amenity")
+                    or tags.get("tourism")
+                    or tags.get("shop")
+                    or tags.get("leisure")
+                    or tags.get("highway")
+                    or "place"
+                ),
+                "lat": lat_value,
+                "lon": lon_value,
+                "address": format_address(tags),
+            }
+        )
 
-    return [
-        place
-        for place in services
-        if query in place["name"].lower()
-    ]
+    return places

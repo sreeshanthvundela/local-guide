@@ -1,6 +1,7 @@
 # Environment files
 .env
 .env.*
+!lg-frontend/local-guide/frontend/.env.example
 
 # Python
 __pycache__/

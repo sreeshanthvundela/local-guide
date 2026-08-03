@@ -1,0 +1,216 @@
+.distance-page {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.distance-panel {
+  width: 420px;
+  padding: 24px;
+  overflow-y: auto;
+  border-right: 1px solid #e2e8f0;
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+.distance-panel h1 {
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+  color: #1e293b;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.mode-toggle button {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #475569;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.mode-toggle button.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-row input:focus {
+  border-color: #2563eb;
+}
+
+.btn-small {
+  padding: 10px 16px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.btn-small:hover {
+  background: #1d4ed8;
+}
+
+.swap-btn {
+  align-self: center;
+  padding: 6px 12px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #475569;
+  transition: all 0.2s;
+}
+
+.swap-btn:hover {
+  background: #e2e8f0;
+}
+
+.map-instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.map-instructions p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.map-instructions .hint {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.error-msg {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 0.85rem;
+}
+
+.result-card {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+}
+
+.result-card h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  color: #166534;
+}
+
+.result-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.result-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.result-item .label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.result-item .value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.result-actions {
+  margin-top: 12px;
+}
+
+.btn-clear {
+  padding: 8px 16px;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.btn-clear:hover {
+  background: #f8fafc;
+}
+
+.loading {
+  margin-top: 12px;
+  padding: 10px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.distance-map {
+  flex: 1;
+  min-width: 0;
+}

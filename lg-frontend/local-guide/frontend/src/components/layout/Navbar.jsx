@@ -7,6 +7,7 @@ import {
   FaBars,
   FaTimes
 } from "react-icons/fa";
+import "./Navbar.css";
 
 function Navbar() {
 
@@ -15,6 +16,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [darkMode, setDarkMode] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
   const toggleDarkMode = () => {
     document.body.classList.toggle("dark");
@@ -54,6 +56,17 @@ function Navbar() {
         </Link>
 
         <Link
+          to="/distance"
+          className={
+            location.pathname === "/distance"
+              ? "active-link"
+              : ""
+          }
+        >
+          Distance
+        </Link>
+
+        <Link
           to="/search"
           className={
             location.pathname === "/search"
@@ -62,17 +75,6 @@ function Navbar() {
           }
         >
           Search
-        </Link>
-
-        <Link
-          to="/categories"
-          className={
-            location.pathname === "/categories"
-              ? "active-link"
-              : ""
-          }
-        >
-          Categories
         </Link>
 
       </div>
@@ -86,11 +88,14 @@ function Navbar() {
           <FaMoon />
         </button>
 
-        <Link to="/login">
-          <button className="login-btn">
-            Login
-          </button>
-        </Link>
+        {user ? (
+          <Link className="profile-link" to="/profile">{user.name}</Link>
+        ) : (
+          <>
+            <Link to="/login"><button className="login-btn">Login</button></Link>
+            <Link to="/register"><button className="register-btn">Register</button></Link>
+          </>
+        )}
 
         <button
           className="menu-btn"

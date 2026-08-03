@@ -8,8 +8,11 @@ function CategoryDetails() {
   const navigate = useNavigate();
 
   const [businesses, setBusinesses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const locationAvailable = Boolean(navigator.geolocation);
+  const [loading, setLoading] = useState(locationAvailable);
+  const [error, setError] = useState(
+    locationAvailable ? "" : "Geolocation is not supported by your browser."
+  );
 
   const [location, setLocation] = useState({
     lat: null,
@@ -19,8 +22,6 @@ function CategoryDetails() {
   // Get user's current location
   useEffect(() => {
     if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser.");
-      setLoading(false);
       return;
     }
 

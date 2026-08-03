@@ -88,9 +88,6 @@ def route(
         end_lat=end_lat,
         end_lon=end_lon,
     )
-@router.get("/{osm_id}")
-def business_details(osm_id: int):
-    return get_business_details(osm_id)
 @router.post("/import-all")
 def import_all_services(
     lat: float,
@@ -126,3 +123,10 @@ def nearby_saved_businesses(
         .limit(50)
         .all()
     )
+
+
+# Keep the parameterized route last so /saved, /database, and /route remain
+# reachable as their own endpoints.
+@router.get("/{osm_id}")
+def business_details(osm_id: int):
+    return get_business_details(osm_id)

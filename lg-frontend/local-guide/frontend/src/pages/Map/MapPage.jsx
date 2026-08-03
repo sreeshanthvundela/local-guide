@@ -52,12 +52,13 @@ function MapPage() {
   ]);
 
   const [route, setRoute] = useState(null);
-  const [routeCoordinates, setRouteCoordinates] = useState([]);  const [distance, setDistance] = useState(null);
+  const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
 
   const [destination, setDestination] = useState(null);
+
   useEffect(() => {
     let firstLoad = true;
 
@@ -96,7 +97,6 @@ function MapPage() {
         );
 
         setRoute(data.geometry);
-        setRouteCoordinates(data.coordinates);
         setDistance((data.distance / 1000).toFixed(2));
         setDuration(Math.ceil(data.duration / 60));
 
@@ -107,37 +107,6 @@ function MapPage() {
         console.error(err);
       }
     }
-    useEffect(() => {
-      if (!steps.length) return;
-
-      let closest = 0;
-      let minDistance = Infinity;
-
-      steps.forEach((step, index) => {
-        if (!step.way_points) return;
-
-        const pointIndex = step.way_points[0];
-
-        if (!route?.coordinates?.[pointIndex]) return;
-
-        const point = routeCoordinates[pointIndex];
-
-        if (!point) return;
-        const d = distanceBetween(
-          userLocation[0],
-          userLocation[1],
-          point[1],
-          point[0]
-        );
-
-        if (d < minDistance) {
-          minDistance = d;
-          closest = index;
-        }
-      });
-
-      setCurrentStep(closest);
-    }, [userLocation, steps, route]);
     refreshRoute();
   }, [userLocation, destination]);
   async function loadNearby(lat, lon) {
@@ -157,7 +126,7 @@ function MapPage() {
     if (!steps.length) return;
 
     speak(steps[currentStep].instruction);
-  }, [currentStep]);
+  }, [currentStep, steps]);
   async function handleCategory(category) {
     try {
       setLoading(true);
@@ -218,29 +187,6 @@ function MapPage() {
       console.error(err);
       alert("Failed to calculate route.");
     }
-  }
-  function distanceBetween(lat1, lon1, lat2, lon2) {
-    const R = 6371000;
-
-    const dLat = ((lat2 - lat1) * Math.PI) / 180;
-    const dLon = ((lon2 - lon1) * Math.PI) / 180;
-
-    const a =
-      Math.sin(dLat / 2) *
-        Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-
-    return (
-      2 *
-      R *
-      Math.atan2(
-        Math.sqrt(a),
-        Math.sqrt(1 - a)
-      )
-    );
   }
   function speak(text) {
     window.speechSynthesis.cancel();

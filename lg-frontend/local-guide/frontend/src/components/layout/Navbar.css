@@ -93,6 +93,25 @@
   font-weight:600;
 }
 
+.register-btn{
+  border:1px solid #2563eb;
+  background:white;
+  color:#2563eb;
+  padding:11px 20px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.profile-link{
+  border-radius:12px;
+  background:#2563eb;
+  color:white;
+  padding:12px 18px;
+  font-weight:700;
+  text-decoration:none;
+}
+
 .menu-btn{
   display:none;
 
@@ -136,7 +155,9 @@
     display:flex;
   }
 
-  .login-btn{
+  .login-btn,
+  .register-btn,
+  .profile-link{
     display:none;
   }
 }

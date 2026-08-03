@@ -1,5 +1,5 @@
 import { Polyline, useMap } from "react-leaflet";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import L from "leaflet";
 
 function decodePolyline(encoded) {
@@ -42,10 +42,10 @@ function decodePolyline(encoded) {
 
 export default function RouteLayer({ geometry }) {
   const map = useMap();
-
-  if (!geometry) return null;
-
-  const positions = decodePolyline(geometry);
+  const positions = useMemo(
+    () => (geometry ? decodePolyline(geometry) : []),
+    [geometry]
+  );
 
   useEffect(() => {
     if (positions.length > 0) {
@@ -53,7 +53,9 @@ export default function RouteLayer({ geometry }) {
         padding: [40, 40],
       });
     }
-  }, [geometry]);
+  }, [map, positions]);
+
+  if (!geometry) return null;
 
   return (
     <Polyline

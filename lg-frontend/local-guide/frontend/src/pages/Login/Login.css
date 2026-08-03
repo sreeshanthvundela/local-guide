@@ -50,3 +50,7 @@
 
   cursor: pointer;
 }
+
+.login-success { color: #15803d; }
+.login-register-link { margin: 20px 0 0; text-align: center; }
+.login-register-link a { color: #2563eb; font-weight: 600; }

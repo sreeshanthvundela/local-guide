@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.services.geocoding_service import geocode_address
 
 router = APIRouter()
 
@@ -8,3 +9,10 @@ def get_current_location():
         "status": "success",
         "message": "Location API Working"
     }
+
+@router.get("/geocode")
+def geocode(q: str):
+    result = geocode_address(q)
+    if not result:
+        return {"error": "Location not found"}
+    return result

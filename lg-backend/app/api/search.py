@@ -15,6 +15,7 @@ def search(
     q: str = Query(..., min_length=1),
     lat: float = Query(...),
     lon: float = Query(...),
+    radius: int = Query(default=10000, ge=1000, le=30000),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -26,4 +27,4 @@ def search(
     )
     db.commit()
 
-    return search_places(lat, lon, q)
+    return search_places(lat, lon, q, radius)
