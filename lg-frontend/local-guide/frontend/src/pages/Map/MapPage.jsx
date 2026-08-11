@@ -99,7 +99,11 @@ function MapPage() {
       (position) => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
-
+        console.log("GPS:", {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+        });
         setUserLocation([lat, lon]);
 
         if (firstLoad) {
