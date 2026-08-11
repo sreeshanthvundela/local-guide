@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import MapUpdater from "./MapUpdater";
 import RouteLayer from "../../components/RouteLayer";
-
+import LiveContentLayer from "../../components/LiveContentLayer";
+import { getLiveContent } from "../../services/liveService";
 import {
   MapContainer,
   TileLayer,
@@ -43,7 +44,8 @@ const categories = [
 function MapPage() {
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [liveEvents, setLiveEvents] = useState([]);
+  const [liveAdvertisements, setLiveAdvertisements] = useState([]);
   const [search, setSearch] = useState("");
 
   const [userLocation, setUserLocation] = useState([
@@ -58,7 +60,38 @@ function MapPage() {
   const [currentStep, setCurrentStep] = useState(0);
 
   const [destination, setDestination] = useState(null);
+  async function loadLiveContent(lat, lon) {
+    try {
+      console.log("Loading live content:", {
+        lat,
+        lon,
+      });
 
+      const data = await getLiveContent(lat, lon, 10000);
+
+      console.log("LIVE CONTENT RESPONSE:", data);
+
+      setLiveEvents(
+        Array.isArray(data.events)
+          ? data.events
+          : []
+      );
+
+      setLiveAdvertisements(
+        Array.isArray(data.advertisements)
+          ? data.advertisements
+          : []
+      );
+    } catch (error) {
+      console.error(
+        "Failed to load live content:",
+        error
+      );
+
+      setLiveEvents([]);
+      setLiveAdvertisements([]);
+    }
+  }
   useEffect(() => {
     let firstLoad = true;
 
@@ -72,7 +105,7 @@ function MapPage() {
         if (firstLoad) {
           loadNearby(lat, lon);
           firstLoad = false;
-        }
+        }loadLiveContent(lat, lon);
       },
       console.error,
       {
@@ -395,6 +428,9 @@ function MapPage() {
           <TileLayer
             attribution="&copy; OpenStreetMap"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          /><LiveContentLayer
+            events={liveEvents}
+            advertisements={liveAdvertisements}
           />
 
           {route && (
