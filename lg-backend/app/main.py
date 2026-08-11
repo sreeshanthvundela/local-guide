@@ -18,7 +18,7 @@ from app.api.search import router as search_router
 from app.api.stats import router as stats_router
 from app.api.profile import router as profile_router
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.api.live import router as live_router
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -61,7 +61,11 @@ app.include_router(
     prefix="/category",
     tags=["Category"]
 )
-
+app.include_router(
+    live_router,
+    prefix="/location",
+    tags=["Live Content"],
+)
 app.include_router(
     recommendation_router,
     prefix="/recommendation",
