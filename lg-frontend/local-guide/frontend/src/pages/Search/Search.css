@@ -26,6 +26,9 @@
 .results-summary { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 24px; }
 .results-summary h2 { margin: 6px 0 0; font-size: 1.5rem; }
 .results-summary span { color: #475569; }
+.results-actions { display: flex; align-items: center; gap: 12px; }
+.explore-map-button { border: 0; border-radius: 10px; background: #2563eb; color: white; padding: 10px 14px; font: inherit; font-weight: 700; cursor: pointer; }
+.explore-map-button:hover { background: #1d4ed8; }
 .search-message { padding: 18px; border-radius: 12px; background: white; color: #475569; box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06); }
 .search-message.error { color: #b91c1c; background: #fef2f2; }
 .search-message a { color: inherit; font-weight: 700; }
@@ -42,4 +45,5 @@
   .search-form { flex-direction: column; }
   .search-form button { min-height: 48px; }
   .results-summary { align-items: start; flex-direction: column; }
+  .results-actions { align-items: start; flex-direction: column; }
 }

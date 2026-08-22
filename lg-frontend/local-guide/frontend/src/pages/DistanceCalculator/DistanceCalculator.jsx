@@ -53,12 +53,6 @@ function DistanceCalculator() {
   const [mapZoom, setMapZoom] = useState(13);
   const [mode, setMode] = useState("address");
 
-  useEffect(() => {
-    if (startCoords && endCoords) {
-      calculateRoute(startCoords, endCoords);
-    }
-  }, [startCoords, endCoords]);
-
   async function calculateRoute(start, end) {
     try {
       setLoading(true);
@@ -84,6 +78,15 @@ function DistanceCalculator() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (startCoords && endCoords) {
+      // Schedule the request after React has committed the new points.
+      void Promise.resolve().then(() =>
+        calculateRoute(startCoords, endCoords)
+      );
+    }
+  }, [startCoords, endCoords]);
 
   async function handleGeocodeAddress(address, type) {
     if (!address.trim()) return;

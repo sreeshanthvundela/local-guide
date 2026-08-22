@@ -132,7 +132,27 @@ function Search() {
               <p className="search-eyebrow">RESULTS</p>
               <h2>{results.length} places for “{query}”</h2>
             </div>
-            <span>Within {radius / 1000} km</span>
+            <div className="results-actions">
+              <span>Within {radius / 1000} km</span>
+              {results.length > 0 && (
+                <button
+                  type="button"
+                  className="explore-map-button"
+                  onClick={() =>
+                    navigate("/map", {
+                      state: {
+                        searchResults: results,
+                        searchQuery: query,
+                        searchLocation: location,
+                        searchRadius: radius,
+                      },
+                    })
+                  }
+                >
+                  Explore on map
+                </button>
+              )}
+            </div>
           </div>
         )}
 
