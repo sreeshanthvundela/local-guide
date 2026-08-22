@@ -3,9 +3,9 @@ const API_URL =
 // =============================
 // Get all nearby businesses
 // =============================
-export async function getAllNearbyBusinesses(lat, lon) {
+export async function getAllNearbyBusinesses(lat, lon, radius = 5000) {
   const response = await fetch(
-    `${API_URL}/business/all-nearby?lat=${lat}&lon=${lon}`
+    `${API_URL}/business/all-nearby?lat=${lat}&lon=${lon}&radius=${radius}`
   );
 
   if (!response.ok) {

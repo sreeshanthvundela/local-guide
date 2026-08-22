@@ -7,12 +7,14 @@
 .location-search-section, .business-search-section, .category-section, .live-events-section, .live-ads-section, .business-list { margin-bottom: 22px; }
 .location-search-row { display: flex; gap: 8px; }
 .location-search-row input { min-width: 0; }
+.use-current-location { width: 100%; margin-top: 10px; background: #0f766e !important; }
 .location-error { margin: 10px 0 0; color: #b91c1c; font-size: .9rem; }
 .selected-location-box, .location-accuracy, .map-loading { margin-top: 12px; padding: 12px; border-radius: 9px; background: #eff6ff; color: #1e3a8a; font-size: .9rem; }
 .selected-location-box div { margin-top: 5px; }
 .selected-location-box small, .location-accuracy small { display: block; margin-top: 5px; color: #475569; }
 .accuracy-good { background: #ecfdf5; color: #047857; }.accuracy-medium { background: #fffbeb; color: #92400e; }.accuracy-poor { background: #fef2f2; color: #b91c1c; }
 .business-search-section > button { width: 100%; margin-top: 8px; }
+.business-search-section .show-nearby-button { background: #e0ecff; color: #1d4ed8; }
 .category-header { display: flex; align-items: center; justify-content: space-between; }.category-header h3 { margin: 0; }
 .category-header button { padding: 5px 8px; background: transparent; color: #2563eb; }
 .category-list { display: flex; flex-wrap: wrap; gap: 8px; }.category-list button { background: #eff6ff; color: #1d4ed8; }.category-list button.active-category { background: #1d4ed8; color: #fff; }

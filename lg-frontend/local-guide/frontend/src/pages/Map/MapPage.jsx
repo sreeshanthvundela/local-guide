@@ -106,8 +106,11 @@ function MapPage() {
   const [locationSearching, setLocationSearching] =
     useState(false);
 
-  const [locationError, setLocationError] =
-    useState("");
+  const [locationError, setLocationError] = useState(() =>
+    navigator.geolocation
+      ? ""
+      : "Location is unavailable in this browser. Choose a location to explore places."
+  );
 
 
   /* ---------------------------------------------------------
@@ -118,6 +121,11 @@ function MapPage() {
     Array.isArray(incomingSearch.searchResults)
       ? incomingSearch.searchResults
       : []
+  );
+  const [resultsTitle, setResultsTitle] = useState(() =>
+    incomingSearch.searchQuery
+      ? `Results for “${incomingSearch.searchQuery}”`
+      : "Nearby places"
   );
   const [loading, setLoading] = useState(false);
 
@@ -171,9 +179,10 @@ function MapPage() {
     try {
       setLoading(true);
 
-      const data = await getAllNearbyBusinesses(lat, lon);
+      const data = await getAllNearbyBusinesses(lat, lon, 5000);
 
       setBusinesses(Array.isArray(data) ? data : []);
+      setResultsTitle("Nearby places (within 5 km)");
     } catch (error) {
       console.error("Failed to load nearby businesses:", error);
 
@@ -199,6 +208,7 @@ function MapPage() {
       );
 
       setBusinesses(Array.isArray(data) ? data : []);
+      setResultsTitle(`Nearby ${category.replaceAll("_", " ")}`);
     } catch (error) {
       console.error(
         "Failed to load category businesses:",
@@ -268,16 +278,11 @@ function MapPage() {
 
     setDestination(null);
     setRoute(null);
+    setSelectedCategory("");
+    setSearch("");
+    setSearchError("");
 
-    if (selectedCategory) {
-      await loadCategoryBusinesses(
-        lat,
-        lon,
-        selectedCategory
-      );
-    } else {
-      await loadNearby(lat, lon);
-    }
+    await loadNearby(lat, lon);
 
     await loadLiveContent(lat, lon);
   }
@@ -291,6 +296,21 @@ function MapPage() {
     setLocationQuery("");
 
     selectExploreLocation(lat, lon, name);
+  }
+
+  function useCurrentLocation() {
+    if (!userLocation) {
+      setLocationError("Your current location is still being detected.");
+      return;
+    }
+
+    setLocationQuery("");
+    setLocationError("");
+    void selectExploreLocation(
+      userLocation[0],
+      userLocation[1],
+      "Your current location"
+    );
   }
 
 
@@ -419,17 +439,16 @@ function MapPage() {
            it will NOT override the map.
           */
 
-          if (
-            firstLocation &&
-            accuracy <= 500
-          ) {
+          if (firstLocation) {
             firstLocation = false;
 
-            await selectExploreLocation(
-              lat,
-              lon,
-              "Your current location"
-            );
+            if (!initialSearchLocation) {
+              await selectExploreLocation(
+                lat,
+                lon,
+                "Your current location"
+              );
+            }
           }
         },
 
@@ -438,6 +457,13 @@ function MapPage() {
             "GPS location error:",
             error.message
           );
+
+          if (!initialSearchLocation && firstLocation) {
+            firstLocation = false;
+            setLocationError(
+              "We could not access your location. Choose a location to explore places."
+            );
+          }
         },
 
         {
@@ -451,30 +477,6 @@ function MapPage() {
       navigator.geolocation.clearWatch(watchId);
     };
   }, []);
-
-
-  /* =========================================================
-     INITIAL FALLBACK LOCATION
-
-     If GPS is poor or unavailable, load the fallback
-     businesses only once.
-
-     This does not run if selectedLocation already exists.
-     ========================================================= */
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!selectedLocation) {
-        selectExploreLocation(
-          defaultCenter[0],
-          defaultCenter[1],
-          "Bengaluru"
-        );
-      }
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [selectedLocation]);
 
 
   /* =========================================================
@@ -508,6 +510,7 @@ function MapPage() {
         Array.isArray(data) ? data : []
       );
       setSelectedCategory("");
+      setResultsTitle(`Results for “${query}”`);
     } catch (error) {
       console.error(
         "Business search failed:",
@@ -525,6 +528,20 @@ function MapPage() {
     if (e.key === "Enter") {
       handleBusinessSearch();
     }
+  }
+
+  async function showNearbyPlaces() {
+    const center = selectedLocation || userLocation;
+
+    if (!center) {
+      setSearchError("Choose a location before viewing nearby places.");
+      return;
+    }
+
+    setSearch("");
+    setSearchError("");
+    setSelectedCategory("");
+    await loadNearby(center[0], center[1]);
   }
 
 
@@ -673,7 +690,9 @@ function MapPage() {
     "bank",
     "atm",
     "supermarket",
-    "shopping",
+    "park",
+    "gym",
+    "fuel",
   ];
 
 
@@ -750,6 +769,15 @@ function MapPage() {
               </small>
             </div>
           )}
+
+          <button
+            type="button"
+            className="use-current-location"
+            onClick={useCurrentLocation}
+            disabled={!userLocation}
+          >
+            Use my current location
+          </button>
         </div>
 
 
@@ -804,6 +832,14 @@ function MapPage() {
             onClick={handleBusinessSearch}
           >
             Search Places
+          </button>
+
+          <button
+            type="button"
+            className="show-nearby-button"
+            onClick={showNearbyPlaces}
+          >
+            Show all nearby places
           </button>
 
           {searchError && (
@@ -924,7 +960,7 @@ function MapPage() {
 
         <div className="business-list">
           <h3>
-            🏪 Places Nearby
+            🏪 {resultsTitle}
           </h3>
 
           {!loading &&
